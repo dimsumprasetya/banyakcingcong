@@ -1,110 +1,101 @@
-import { motion, AnimatePresence } from "motion/react";
-import { Character } from "../types";
-import { MessageSquare, Info, History, Heart, X } from "lucide-react";
-import { useState } from "react";
+import { useState } from 'react';
+import Sidebar from './components/Sidebar';
+import ChatInterface from './components/ChatInterface';
+import { CHARACTERS } from './constants';
+import { Character } from './types';
+import { AlertTriangle } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
-interface SidebarProps {
-  characters: Character[];
-  selectedCharacter: Character;
-  onSelect: (char: Character) => void;
-}
+export default function App() {
+  const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false);
+  const [selectedCharacter, setSelectedCharacter] = useState<Character>(CHARACTERS[0]);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-export default function Sidebar({ characters, selectedCharacter, onSelect }: SidebarProps) {
-  const [showDonate, setShowDonate] = useState(false);
+  const handleSelectCharacter = (char: Character) => {
+    setSelectedCharacter(char);
+    setIsMobileMenuOpen(false);
+  };
+
+  if (!hasAcceptedDisclaimer) {
+    return (
+      <div className="flex h-screen bg-sim-bg items-center justify-center p-4 font-sans text-sim-black relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-sim-yellow/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-sim-yellow/20 rounded-full blur-3xl pointer-events-none" />
+        
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white border-4 border-sim-black p-8 rounded-3xl shadow-[8px_8px_0_rgba(0,0,0,1)] max-w-md w-full text-center relative z-10"
+        >
+          <div className="flex justify-center mb-6">
+            <div className="p-4 bg-sim-yellow mb-2 rounded-full border-2 border-sim-black shadow-[4px_4px_0_rgba(0,0,0,1)]">
+              <AlertTriangle size={48} className="text-sim-black" />
+            </div>
+          </div>
+          <h2 className="text-2xl font-black mb-4 uppercase tracking-tight">Perhatian!</h2>
+          <p className="text-slate-600 mb-8 font-medium leading-relaxed">
+            Semua percakapan dan peran tokoh di sini sepenuhnya digenerate oleh AI dan <strong>HANYA UNTUK HIBURAN SEMATA</strong>. 
+            Jangan diambil hati apalagi dibawa serius ya bree! ✌️
+          </p>
+          <button 
+            onClick={() => setHasAcceptedDisclaimer(true)}
+            className="w-full bg-sim-yellow text-sim-black font-bold py-4 rounded-xl border-2 border-sim-black shadow-[4px_4px_0_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-widest text-sm active:bg-sim-yellow/90"
+          >
+            Paham, Gas Ngobrol!
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
-    <div className="flex-1 w-full h-full bg-white border-r border-slate-200 flex flex-col relative">
-      <div className="p-6 border-bottom border-slate-100 bg-sim-yellow/10">
-        <h1 className="text-2xl font-black text-sim-black flex items-center gap-2 drop-shadow-[0_2px_0_rgba(255,242,0,1)] tracking-tighter">
-           BanyakCingCong
-        </h1>
-        <p className="text-slate-500 text-sm mt-1 font-semibold">ngobrol santuy sama Tokoh Indonesia</p>
+    <div className="flex h-screen bg-white text-slate-800 overflow-hidden font-sans">
+      {/* Desktop Sidebar */}
+      <div className="hidden md:flex flex-col w-80 h-full shrink-0">
+        <Sidebar 
+          characters={CHARACTERS} 
+          selectedCharacter={selectedCharacter} 
+          onSelect={handleSelectCharacter} 
+        />
       </div>
 
-      <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">
-        <div className="px-6 mb-2">
-          <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest">Pilih Tokoh</h2>
-        </div>
-        {characters.map((char) => (
-          <button
-            id={`char-btn-${char.id}`}
-            key={char.id}
-            onClick={() => onSelect(char)}
-            className={`w-full px-6 py-4 flex items-center gap-4 transition-all hover:bg-slate-50 relative group ${
-              selectedCharacter.id === char.id ? "sidebar-item-active" : "text-slate-600"
-            }`}
-          >
-            {selectedCharacter.id === char.id && (
-              <motion.div
-                layoutId="active-marker"
-                className="absolute left-0 w-2 h-10 bg-sim-yellow rounded-r-full border-y border-r border-sim-black"
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col min-w-0 relative h-full">
+
+        {/* Mobile Sidebar Overlay */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <>
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 md:hidden"
               />
-            )}
-            <img
-              src={char.avatar}
-              alt={char.name}
-              referrerPolicy="no-referrer"
-              className={`w-14 h-14 rounded-full object-cover shadow-md transition-transform group-hover:scale-110 border-2 border-sim-black ${
-                selectedCharacter.id === char.id ? "ring-4 ring-sim-yellow/40" : ""
-              }`}
-            />
-            <div className="text-left flex-1 min-w-0">
-              <h3 className={`font-bold truncate ${selectedCharacter.id === char.id ? "text-sim-black" : "text-slate-800"}`}>
-                {char.name}
-              </h3>
-              <p className="text-xs text-slate-500 truncate font-medium">{char.role}</p>
-            </div>
-          </button>
-        ))}
-      </div>
-
-      <div className="p-4 border-t border-slate-100 flex flex-col gap-2">
-        <p className="text-[10px] text-slate-400 uppercase tracking-widest text-center leading-relaxed">
-          buat hiburan semata biar lemes
-        </p>
-        <button
-          onClick={() => setShowDonate(true)}
-          className="w-full py-2 bg-sim-yellow border-2 border-sim-black rounded-lg text-xs font-bold shadow-[2px_2px_0_rgba(0,0,0,1)] hover:translate-y-0.5 hover:shadow-none transition-all flex items-center justify-center gap-2"
-        >
-          <Heart size={14} className="fill-current" />
-          kalo terhibur boleh dong bayar
-        </button>
-      </div>
-
-      {/* Donation Modal */}
-      <AnimatePresence>
-        {showDonate && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setShowDonate(false)}
-              className="absolute inset-0 bg-sim-black/60 backdrop-blur-sm"
-            />
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white border-4 border-sim-black p-6 rounded-3xl shadow-[8px_8px_0_rgba(0,0,0,1)] max-w-sm w-full relative z-[101] text-center"
-            >
-              <button 
-                onClick={() => setShowDonate(false)}
-                className="absolute top-4 right-4 p-1 hover:bg-slate-100 rounded-full"
+              <motion.div 
+                initial={{ x: '-100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '-100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-white z-40 md:hidden shadow-2xl flex flex-col overflow-hidden"
               >
-                <X size={20} />
-              </button>
-              <h3 className="text-xl font-bold mb-4">Bayar Treat Mama/Bapak</h3>
-              <div className="bg-slate-50 p-4 rounded-2xl border-2 border-slate-100 mb-4 flex justify-center flex-col items-center gap-4">
-                <div className="text-xl md:text-2xl font-black text-slate-800 font-mono tracking-widest bg-sim-yellow/30 px-4 py-3 rounded-xl border-2 border-sim-black">
-                  3901081806335265
-                </div>
-              </div>
-              <p className="text-sm text-slate-500 font-medium">Kirim ke nomer DANA di atas ya!</p>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+                <Sidebar 
+                  characters={CHARACTERS} 
+                  selectedCharacter={selectedCharacter} 
+                  onSelect={handleSelectCharacter} 
+                />
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+
+        <ChatInterface 
+          character={selectedCharacter} 
+          isMobileMenuOpen={isMobileMenuOpen}
+          toggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        />
+      </main>
     </div>
   );
 }

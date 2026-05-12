@@ -1,101 +1,54 @@
-import { useState } from 'react';
-import Sidebar from './components/Sidebar';
-import ChatInterface from './components/ChatInterface';
-import { CHARACTERS } from './constants';
-import { Character } from './types';
-import { AlertTriangle } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
+import { Message } from "../types";
 
-export default function App() {
-  const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false);
-  const [selectedCharacter, setSelectedCharacter] = useState<Character>(CHARACTERS[0]);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const OPENROUTER_API_KEY = "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";
 
-  const handleSelectCharacter = (char: Character) => {
-    setSelectedCharacter(char);
-    setIsMobileMenuOpen(false);
-  };
+export async function getCharacterResponse(
+  systemInstruction: string,
+  history: Message[],
+  userMessage: string
+) {
+  try {
+    const formattedHistory = history.map((msg) => ({
+      role: msg.role === "user" ? "user" : "assistant",
+      content: msg.content,
+    }));
 
-  if (!hasAcceptedDisclaimer) {
-    return (
-      <div className="flex h-screen bg-sim-bg items-center justify-center p-4 font-sans text-sim-black relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-sim-yellow/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-sim-yellow/20 rounded-full blur-3xl pointer-events-none" />
-        
-        <motion.div 
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="bg-white border-4 border-sim-black p-8 rounded-3xl shadow-[8px_8px_0_rgba(0,0,0,1)] max-w-md w-full text-center relative z-10"
-        >
-          <div className="flex justify-center mb-6">
-            <div className="p-4 bg-sim-yellow mb-2 rounded-full border-2 border-sim-black shadow-[4px_4px_0_rgba(0,0,0,1)]">
-              <AlertTriangle size={48} className="text-sim-black" />
-            </div>
-          </div>
-          <h2 className="text-2xl font-black mb-4 uppercase tracking-tight">Perhatian!</h2>
-          <p className="text-slate-600 mb-8 font-medium leading-relaxed">
-            Semua percakapan dan peran tokoh di sini sepenuhnya digenerate oleh AI dan <strong>HANYA UNTUK HIBURAN SEMATA</strong>. 
-            Jangan diambil hati apalagi dibawa serius ya bree! ✌️
-          </p>
-          <button 
-            onClick={() => setHasAcceptedDisclaimer(true)}
-            className="w-full bg-sim-yellow text-sim-black font-bold py-4 rounded-xl border-2 border-sim-black shadow-[4px_4px_0_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-widest text-sm active:bg-sim-yellow/90"
-          >
-            Paham, Gas Ngobrol!
-          </button>
-        </motion.div>
-      </div>
-    );
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://ai.studio",
+        "X-Title": "AI Studio App"
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash",
+        messages: [
+          {
+            role: "system",
+            content: `${systemInstruction}\n\nATURAN MUTLAK: 100% ROLEPLAY! Jawablah pertanyaan user dengan NYAMBUNG dan TEPAT SASARAN, TETAPI tetap gunakan gaya bahasa LEBAY, SUPER SERU, atau SANGAT DRAMATIS sesuai karaktermu! Keluarkan jargon, catchphrase, dan logat andalanmu. WAJIB SINGKAT MAKSIMAL 1-2 KALIMAT PENDEK ala nge-chat WA! Kasih emoji asik!`,
+          },
+          ...formattedHistory,
+          { role: "user", content: userMessage },
+        ],
+        temperature: 0.85,
+        top_p: 0.95,
+        max_tokens: 300,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("OpenRouter API Error:", data);
+      throw new Error(
+        `OpenRouter Error: ${data.error?.message || JSON.stringify(data)}`
+      );
+    }
+
+    return data.choices[0].message.content;
+  } catch (error: any) {
+    console.error("API Error:", error);
+    throw new Error(error.message || "Maaf, sepertinya sambungan batin sedang terganggu. Coba lagi nanti ya.");
   }
-
-  return (
-    <div className="flex h-screen bg-white text-slate-800 overflow-hidden font-sans">
-      {/* Desktop Sidebar */}
-      <div className="hidden md:flex flex-col w-80 h-full shrink-0">
-        <Sidebar 
-          characters={CHARACTERS} 
-          selectedCharacter={selectedCharacter} 
-          onSelect={handleSelectCharacter} 
-        />
-      </div>
-
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col min-w-0 relative h-full">
-
-        {/* Mobile Sidebar Overlay */}
-        <AnimatePresence>
-          {isMobileMenuOpen && (
-            <>
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-30 md:hidden"
-              />
-              <motion.div 
-                initial={{ x: '-100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '-100%' }}
-                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-white z-40 md:hidden shadow-2xl flex flex-col"
-              >
-                <Sidebar 
-                  characters={CHARACTERS} 
-                  selectedCharacter={selectedCharacter} 
-                  onSelect={handleSelectCharacter} 
-                />
-              </motion.div>
-            </>
-          )}
-        </AnimatePresence>
-
-        <ChatInterface 
-          character={selectedCharacter} 
-          isMobileMenuOpen={isMobileMenuOpen}
-          toggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        />
-      </main>
-    </div>
-  );
 }
