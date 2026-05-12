@@ -59,16 +59,6 @@ export default function App() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 relative h-full">
-        {/* Mobile Nav Toggle */}
-        <div className="md:hidden absolute top-4 left-4 z-50">
-          <button 
-            id="mobile-menu-toggle"
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="p-3 bg-sim-yellow shadow-lg rounded-full text-sim-black border-2 border-sim-black z-50"
-          >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-        </div>
 
         {/* Mobile Sidebar Overlay */}
         <AnimatePresence>
@@ -113,7 +103,11 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        <ChatInterface character={selectedCharacter} />
+        <ChatInterface 
+          character={selectedCharacter} 
+          isMobileMenuOpen={isMobileMenuOpen}
+          toggleMobileMenu={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        />
       </main>
     </div>
   );

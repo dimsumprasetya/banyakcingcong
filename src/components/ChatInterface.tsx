@@ -6,9 +6,11 @@ import { getCharacterResponse } from "../services/geminiService";
 
 interface ChatInterfaceProps {
   character: Character;
+  isMobileMenuOpen: boolean;
+  toggleMobileMenu: () => void;
 }
 
-export default function ChatInterface({ character }: ChatInterfaceProps) {
+export default function ChatInterface({ character, isMobileMenuOpen, toggleMobileMenu }: ChatInterfaceProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -90,7 +92,14 @@ export default function ChatInterface({ character }: ChatInterfaceProps) {
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-sim-yellow/10 rounded-full blur-3xl -ml-48 -mb-48 pointer-events-none" />
 
       {/* Header */}
-      <header className="bg-sim-yellow shadow-md border-b-2 border-sim-black pl-20 md:pl-6 pr-4 md:pr-6 py-3 border-x-0 md:py-4 flex items-center justify-between z-10 gap-2">
+      <header className="bg-sim-yellow shadow-md border-b-2 border-sim-black pl-4 md:pl-6 pr-4 md:pr-6 py-3 border-x-0 md:py-4 flex items-center justify-between z-10 gap-2">
+        <button 
+          id="mobile-menu-toggle"
+          onClick={toggleMobileMenu}
+          className="md:hidden p-2 rounded-full text-sim-black border-2 border-sim-black bg-white"
+        >
+          {isMobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
+        </button>
         <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
           <img
             src={character.avatar}
