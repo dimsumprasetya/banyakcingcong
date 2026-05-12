@@ -14,7 +14,7 @@ export default function Sidebar({ characters, selectedCharacter, onSelect }: Sid
 
   return (
     <div className="w-80 h-full bg-white border-r border-slate-200 flex flex-col hidden md:flex relative">
-      <div className="p-6 border-b border-slate-100 bg-sim-yellow/10">
+      <div className="p-6 border-bottom border-slate-100 bg-sim-yellow/10">
         <h1 className="text-2xl font-black text-sim-black flex items-center gap-2 drop-shadow-[0_2px_0_rgba(255,242,0,1)] tracking-tighter">
            BanyakCingCong
         </h1>
@@ -96,14 +96,11 @@ export default function Sidebar({ characters, selectedCharacter, onSelect }: Sid
               </button>
               <h3 className="text-xl font-bold mb-4">Bayar Treat Mama/Bapak</h3>
               <div className="bg-slate-50 p-4 rounded-2xl border-2 border-slate-100 mb-4 flex justify-center flex-col items-center gap-4">
-                <img 
-                  src="/input_file_2.png" 
-                  alt="GoPay QR" 
-                  referrerPolicy="no-referrer"
-                  className="max-w-[200px] h-auto rounded-xl shadow-lg border-2 border-sim-black"
-                />
+                <div className="text-xl md:text-2xl font-black text-slate-800 font-mono tracking-widest bg-sim-yellow/30 px-4 py-3 rounded-xl border-2 border-sim-black">
+                  3901081806335265
+                </div>
               </div>
-              <p className="text-sm text-slate-500 font-medium">Scan QR di atas lewat GoPay ya!</p>
+              <p className="text-sm text-slate-500 font-medium">Kirim ke nomer DANA di atas ya!</p>
             </motion.div>
           </div>
         )}
