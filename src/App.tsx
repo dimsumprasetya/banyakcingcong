@@ -3,10 +3,11 @@ import Sidebar from './components/Sidebar';
 import ChatInterface from './components/ChatInterface';
 import { CHARACTERS } from './constants';
 import { Character } from './types';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
+  const [hasAcceptedDisclaimer, setHasAcceptedDisclaimer] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<Character>(CHARACTERS[0]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -14,6 +15,38 @@ export default function App() {
     setSelectedCharacter(char);
     setIsMobileMenuOpen(false);
   };
+
+  if (!hasAcceptedDisclaimer) {
+    return (
+      <div className="flex h-screen bg-sim-bg items-center justify-center p-4 font-sans text-sim-black relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-sim-yellow/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-sim-yellow/20 rounded-full blur-3xl pointer-events-none" />
+        
+        <motion.div 
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          className="bg-white border-4 border-sim-black p-8 rounded-3xl shadow-[8px_8px_0_rgba(0,0,0,1)] max-w-md w-full text-center relative z-10"
+        >
+          <div className="flex justify-center mb-6">
+            <div className="p-4 bg-sim-yellow mb-2 rounded-full border-2 border-sim-black shadow-[4px_4px_0_rgba(0,0,0,1)]">
+              <AlertTriangle size={48} className="text-sim-black" />
+            </div>
+          </div>
+          <h2 className="text-2xl font-black mb-4 uppercase tracking-tight">Perhatian!</h2>
+          <p className="text-slate-600 mb-8 font-medium leading-relaxed">
+            Semua percakapan dan peran tokoh di sini sepenuhnya digenerate oleh AI dan <strong>HANYA UNTUK HIBURAN SEMATA</strong>. 
+            Jangan diambil hati apalagi dibawa serius ya bree! ✌️
+          </p>
+          <button 
+            onClick={() => setHasAcceptedDisclaimer(true)}
+            className="w-full bg-sim-yellow text-sim-black font-bold py-4 rounded-xl border-2 border-sim-black shadow-[4px_4px_0_rgba(0,0,0,1)] hover:translate-y-1 hover:shadow-none transition-all uppercase tracking-widest text-sm active:bg-sim-yellow/90"
+          >
+            Paham, Gas Ngobrol!
+          </button>
+        </motion.div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-white text-slate-800 overflow-hidden font-sans">

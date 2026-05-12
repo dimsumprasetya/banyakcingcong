@@ -90,23 +90,23 @@ export default function ChatInterface({ character }: ChatInterfaceProps) {
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-sim-yellow/10 rounded-full blur-3xl -ml-48 -mb-48 pointer-events-none" />
 
       {/* Header */}
-      <header className="bg-sim-yellow shadow-md border-b-2 border-sim-black px-6 py-4 flex items-center justify-between z-10">
-        <div className="flex items-center gap-4">
+      <header className="bg-sim-yellow shadow-md border-b-2 border-sim-black pl-20 md:pl-6 pr-4 md:pr-6 py-3 border-x-0 md:py-4 flex items-center justify-between z-10 gap-2">
+        <div className="flex items-center gap-2 md:gap-4 flex-1 min-w-0">
           <img
             src={character.avatar}
             alt={character.name}
             referrerPolicy="no-referrer"
-            className="w-12 h-12 rounded-full object-cover border-2 border-sim-black bg-white shadow-sm"
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover border-2 border-sim-black bg-white shadow-sm shrink-0"
           />
-          <div>
-            <h2 className="font-bold text-sim-black text-xl leading-tight drop-shadow-sm">{character.name}</h2>
-            <p className="text-xs text-sim-black font-bold flex items-center gap-1 opacity-70">
+          <div className="min-w-0">
+            <h2 className="font-bold text-sim-black text-lg md:text-xl leading-tight drop-shadow-sm truncate">{character.name}</h2>
+            <p className="text-[10px] md:text-xs text-sim-black font-bold flex items-center gap-1 opacity-70 truncate">
               <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse border border-sim-black" />
               Online lho!
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 shrink-0">
           <button 
             id="info-toggle-btn"
             onClick={() => setShowInfo(!showInfo)}

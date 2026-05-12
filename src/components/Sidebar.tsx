@@ -18,7 +18,7 @@ export default function Sidebar({ characters, selectedCharacter, onSelect }: Sid
         <h1 className="text-2xl font-black text-sim-black flex items-center gap-2 drop-shadow-[0_2px_0_rgba(255,242,0,1)] tracking-tighter">
            BanyakCingCong
         </h1>
-        <p className="text-slate-500 text-sm mt-1 font-semibold">Ngobrol Santai Tokoh Indonesia</p>
+        <p className="text-slate-500 text-sm mt-1 font-semibold">ngobrol santuy sama Tokoh Indonesia</p>
       </div>
 
       <div className="flex-1 overflow-y-auto py-4 custom-scrollbar">
