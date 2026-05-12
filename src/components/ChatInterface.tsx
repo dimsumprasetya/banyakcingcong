@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, FormEvent } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Send, Sparkles, Loader2, User, Bot, RefreshCw, Info, ChevronDown, ChevronUp } from "lucide-react";
+import { Send, Sparkles, Loader2, User, Bot, RefreshCw, Info, ChevronDown, ChevronUp, Menu, X } from "lucide-react";
 import { Character, Message } from "../types";
 import { getCharacterResponse } from "../services/geminiService";
 
