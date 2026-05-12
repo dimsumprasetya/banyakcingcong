@@ -3,7 +3,7 @@ import Sidebar from './components/Sidebar';
 import ChatInterface from './components/ChatInterface';
 import { CHARACTERS } from './constants';
 import { Character } from './types';
-import { Menu, X, AlertTriangle } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 export default function App() {
@@ -51,11 +51,13 @@ export default function App() {
   return (
     <div className="flex h-screen bg-white text-slate-800 overflow-hidden font-sans">
       {/* Desktop Sidebar */}
-      <Sidebar 
-        characters={CHARACTERS} 
-        selectedCharacter={selectedCharacter} 
-        onSelect={handleSelectCharacter} 
-      />
+      <div className="hidden md:flex flex-col w-80 h-full shrink-0">
+        <Sidebar 
+          characters={CHARACTERS} 
+          selectedCharacter={selectedCharacter} 
+          onSelect={handleSelectCharacter} 
+        />
+      </div>
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0 relative h-full">
@@ -76,28 +78,13 @@ export default function App() {
                 animate={{ x: 0 }}
                 exit={{ x: '-100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-white z-40 md:hidden shadow-2xl flex flex-col"
+                className="fixed inset-y-0 left-0 w-4/5 max-w-xs bg-white z-40 md:hidden shadow-2xl flex flex-col overflow-hidden"
               >
-                <div className="p-6 border-b-2 border-sim-black bg-sim-yellow">
-                  <h1 className="text-xl font-black text-sim-black drop-shadow-sm">BanyakCingCong</h1>
-                </div>
-                <div className="flex-1 overflow-y-auto py-2 custom-scrollbar">
-                  {CHARACTERS.map((char) => (
-                    <button
-                      key={char.id}
-                      onClick={() => handleSelectCharacter(char)}
-                      className={`w-full px-6 py-4 flex items-center gap-4 transition-all ${
-                        selectedCharacter.id === char.id ? "bg-sim-yellow/30 text-sim-black border-l-4 border-sim-yellow" : "text-slate-600"
-                      }`}
-                    >
-                      <img src={char.avatar} alt={char.name} className="w-12 h-12 rounded-full object-cover border-2 border-sim-black shadow-sm" />
-                      <div className="text-left">
-                        <h3 className="font-semibold text-sm">{char.name}</h3>
-                        <p className="text-[10px] opacity-70">{char.role}</p>
-                      </div>
-                    </button>
-                  ))}
-                </div>
+                <Sidebar 
+                  characters={CHARACTERS} 
+                  selectedCharacter={selectedCharacter} 
+                  onSelect={handleSelectCharacter} 
+                />
               </motion.div>
             </>
           )}

@@ -1,7 +1,8 @@
 async function main() {
-  const q = encodeURIComponent("Mama Gufron");
-  const res = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&prop=imageinfo&iiprop=url&format=json`);
-  const data = await res.json();
-  console.log(data);
+  const text = await fetch("https://www.youtube.com/results?search_query=mama+gufron").then(r => r.text());
+  const match = text.match(/videoId":"([a-zA-Z0-9_-]{11})"/);
+  if (match) {
+    console.log("https://img.youtube.com/vi/" + match[1] + "/0.jpg");
+  }
 }
-main()
+main();

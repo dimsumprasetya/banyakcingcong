@@ -13,8 +13,8 @@ export default function Sidebar({ characters, selectedCharacter, onSelect }: Sid
   const [showDonate, setShowDonate] = useState(false);
 
   return (
-    <div className="w-80 h-full bg-white border-r border-slate-200 flex flex-col hidden md:flex relative">
-      <div className="p-6 border-bottom border-slate-100 bg-sim-yellow/10">
+    <div className="flex-1 min-h-0 w-full h-full bg-white border-r border-slate-200 flex flex-col relative">
+      <div className="p-6 border-bottom border-slate-100 bg-sim-yellow/10 shrink-0">
         <h1 className="text-2xl font-black text-sim-black flex items-center gap-2 drop-shadow-[0_2px_0_rgba(255,242,0,1)] tracking-tighter">
            BanyakCingCong
         </h1>
@@ -58,7 +58,7 @@ export default function Sidebar({ characters, selectedCharacter, onSelect }: Sid
         ))}
       </div>
 
-      <div className="p-4 border-t border-slate-100 flex flex-col gap-2">
+      <div className="p-4 pb-8 md:pb-4 border-t border-slate-100 flex flex-col gap-2 shrink-0">
         <p className="text-[10px] text-slate-400 uppercase tracking-widest text-center leading-relaxed">
           buat hiburan semata biar lemes
         </p>

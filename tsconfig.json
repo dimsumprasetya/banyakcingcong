@@ -1,12 +1,26 @@
-import { urls } from './urls.js';
-async function run() {
-  for (const [k, v] of Object.entries(urls)) {
-    try {
-      const r = await fetch(v);
-      console.log(k, r.status);
-    } catch(e) {
-      console.log(k, 'error');
-    }
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "ESNext",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
   }
 }
-run();
