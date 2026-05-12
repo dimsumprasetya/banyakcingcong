@@ -1,7 +1,7 @@
 async function main() {
-  const q = encodeURIComponent("Mama Gufron");
-  const res = await fetch(`https://commons.wikimedia.org/w/api.php?action=query&generator=search&gsrsearch=${q}&gsrnamespace=6&prop=imageinfo&iiprop=url&format=json`);
-  const data = await res.json();
-  console.log(data);
+  const g = await fetch('https://www.viva.co.id/tag/mama-gufron');
+  const text = await g.text();
+  const urls = text.match(/https:\/\/[^"]+\.jpg/g);
+  console.log([...new Set(urls)].slice(0, 5));
 }
-main()
+main();

@@ -1,7 +1,26 @@
-async function main() {
-  const g = await fetch('https://www.viva.co.id/tag/mama-gufron');
-  const text = await g.text();
-  const urls = text.match(/https:\/\/[^"]+\.jpg/g);
-  console.log([...new Set(urls)].slice(0, 5));
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "module": "ESNext",
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": [
+        "./*"
+      ]
+    },
+    "allowImportingTsExtensions": true,
+    "noEmit": true
+  }
 }
-main();
